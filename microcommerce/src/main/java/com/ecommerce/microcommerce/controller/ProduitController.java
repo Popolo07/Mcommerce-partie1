@@ -148,10 +148,22 @@ public class ProduitController {
 
         produitDao.deleteById(id);
     }
+    
     @PutMapping (value = "/Produits")
-    public void updateProduit(@RequestBody Produit product) {
+    public ResponseEntity<Void> updateProduit(@RequestBody Produit produit) throws ProduitGratuitException {
+        if(produit.getPrix()<1) throw new ProduitGratuitException ("Le prix de vente doit être supperieur 0 (" + produit.getPrix() + " )");
 
-        produitDao.save(product);
+        produitDao.save(produit);
+    	Produit produitAdded = produitDao.save(produit);
+        if (produitAdded == null) {
+        	return ResponseEntity.noContent().build();
+        }
+        URI location = ServletUriComponentsBuilder
+        		.fromCurrentRequestUri()
+        		.path("/{id}")
+        		.buildAndExpand(produitAdded.getId())
+        		.toUri();
+        return ResponseEntity.created(location).build();   
     }
 
 

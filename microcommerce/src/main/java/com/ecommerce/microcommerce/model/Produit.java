@@ -18,7 +18,6 @@ public class Produit {
 	private int id;
 	@Length(min=3, max=20)
 	private String nom;
-//	@Min(value = 1)
 	private int prix;
 	@Min(value = 1)
 	private int prixAchat;
