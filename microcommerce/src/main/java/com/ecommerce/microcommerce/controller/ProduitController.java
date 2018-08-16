@@ -55,7 +55,7 @@ public class ProduitController {
     }
 
     //Récupérer un produit par son Id
-    @ApiOperation("Recupere un produit avec son ID fix")
+    @ApiOperation("Recupere un produit avec son ID fix fix")
     @GetMapping(value="/Produits/{id}")
     public Produit afficherUnProduit(@PathVariable int id) throws ProduitIntrouvableException  {
         Produit produit= produitDao.findById(id);
