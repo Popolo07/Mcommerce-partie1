@@ -6,6 +6,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +56,21 @@ public class ProduitController {
 
         return produitsFiltres;
     }
+    //Récupérer la liste des produits
+    @RequestMapping(value="/Produitstrier", method=RequestMethod.GET)
+    public MappingJacksonValue trierProduitsParOrdreAlphabetique() {
+    	Sort sort = new Sort(Direction.ASC, "nom");
+        Iterable<Produit> produits = produitDao.findAll(sort);
+        SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("prixAchat");
 
+        FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+
+        MappingJacksonValue produitsFiltres = new MappingJacksonValue(produits);
+
+        produitsFiltres.setFilters(listDeNosFiltres);
+
+        return produitsFiltres;
+    }
     //Récupérer un produit par son Id
     @ApiOperation("Recupere un produit avec son ID ok")
     @GetMapping(value="/Produits/{id}")
