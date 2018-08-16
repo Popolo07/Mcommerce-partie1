@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ecommerce.microcommerce.dao.ProduitDao;
+import com.ecommerce.microcommerce.exceptions.ProduitGratuitException;
 import com.ecommerce.microcommerce.exceptions.ProduitIntrouvableException;
 import com.ecommerce.microcommerce.model.Produit;
 import com.ecommerce.microcommerce.model.ProduitMarge;
@@ -111,7 +112,9 @@ public class ProduitController {
     @GetMapping(value="/Produits/{id}")
     public Produit afficherUnProduit(@PathVariable int id) throws ProduitIntrouvableException  {
         Produit produit= produitDao.findById(id);
+        
         if(produit==null) throw new ProduitIntrouvableException ("Le produit avec l'id " + id + " est INTROUVABLE. Écran Bleu si je pouvais.");
+        
         return produit;
     }	
     @GetMapping(value = "test/produits/limit/{prixLimit}")
@@ -125,8 +128,10 @@ public class ProduitController {
         
     //ajouter un produit
     @PostMapping(value = "/Produits")
-    public ResponseEntity<Void> ajouterProduit(@Valid @RequestBody Produit produit) {
-        Produit produitAdded = produitDao.save(produit);
+    public ResponseEntity<Void> ajouterProduit(@Valid @RequestBody Produit produit) throws ProduitGratuitException {
+        if(produit.getPrix()<1) throw new ProduitGratuitException ("Le prix de vente doit être supperieur 0 (" + produit.getPrix() + " )");
+
+    	Produit produitAdded = produitDao.save(produit);
         if (produitAdded == null) {
         	return ResponseEntity.noContent().build();
         }
