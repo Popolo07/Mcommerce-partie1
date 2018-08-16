@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,7 +55,7 @@ public class ProduitController {
     }
 
     //Récupérer un produit par son Id
-    @ApiOperation("Recupere un produit avec son ID fix fix")
+    @ApiOperation("Recupere un produit avec son ID ok")
     @GetMapping(value="/Produits/{id}")
     public Produit afficherUnProduit(@PathVariable int id) throws ProduitIntrouvableException  {
         Produit produit= produitDao.findById(id);
